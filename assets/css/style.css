@@ -16,6 +16,13 @@ body {
     min-height: 100vh;
 }
 
+.app-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
 .navbar-brand,
 .btn-warning {
     font-weight: 700;
@@ -73,9 +80,42 @@ body {
 }
 
 .news-image {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    width: min(100%, 480px);
+    max-height: 360px;
     object-fit: cover;
     border-radius: 12px;
     border: 1px solid var(--gray-200);
+    display: block;
+}
+
+.news-image-compact {
+    width: 100%;
+    max-width: 280px;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+}
+
+.news-list-panel {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.news-preview-card {
+    background: #fafafa;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 260px;
+}
+
+.x-small {
+    font-size: 0.75rem;
+}
+
+@media (max-width: 991px) {
+    .support-floating {
+        display: none;
+    }
 }

@@ -30,7 +30,7 @@ if (dbHasColumn('users', 'last_seen_news_id')) {
 <body class="app-bg">
 <nav class="navbar navbar-expand-lg bg-warning shadow-sm">
     <div class="container">
-        <span class="navbar-brand">Новости CRM</span>
+        <div class="d-flex align-items-center gap-2"><img src="/assets/img/logo.png" alt="Логотип" class="app-logo" onerror="this.style.display='none'"><span class="navbar-brand mb-0">Новости CRM</span></div>
         <div class="d-flex gap-2">
             <?php if (($_SESSION['user']['role'] ?? '') === 'admin'): ?>
                 <a href="/admin" class="btn btn-dark">Админ панель</a>

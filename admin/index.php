@@ -26,7 +26,7 @@ if (dbHasColumn('payout_requests', 'id')) {
 <body class="app-bg">
 <nav class="navbar navbar-expand-lg bg-warning shadow-sm">
     <div class="container">
-        <span class="navbar-brand">Админ панель</span>
+        <div class="d-flex align-items-center gap-2"><img src="/assets/img/logo.png" alt="Логотип" class="app-logo" onerror="this.style.display='none'"><span class="navbar-brand mb-0">Админ панель</span></div>
         <a href="/logout" class="btn btn-dark">Выйти</a>
     </div>
 </nav>
