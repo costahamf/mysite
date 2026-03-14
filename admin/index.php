@@ -8,6 +8,7 @@ requireAdmin();
 $pdo = getPDO();
 $recruitersCount = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'recruiter'")->fetchColumn();
 $couriersCount = (int) $pdo->query('SELECT COUNT(*) FROM couriers')->fetchColumn();
+$newsCount = (int) $pdo->query('SELECT COUNT(*) FROM news')->fetchColumn();
 ?>
 <!doctype html>
 <html lang="ru">
@@ -29,13 +30,16 @@ $couriersCount = (int) $pdo->query('SELECT COUNT(*) FROM couriers')->fetchColumn
     <h1 class="h3 section-title mb-4">Управление CRM</h1>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-6"><div class="crm-card p-3"><div class="text-muted">Рекрутеры</div><div class="h2 mb-0"><?= $recruitersCount ?></div></div></div>
-        <div class="col-md-6"><div class="crm-card p-3"><div class="text-muted">Курьеры</div><div class="h2 mb-0"><?= $couriersCount ?></div></div></div>
+        <div class="col-md-4"><div class="crm-card p-3"><div class="text-muted">Рекрутеры</div><div class="h2 mb-0"><?= $recruitersCount ?></div></div></div>
+        <div class="col-md-4"><div class="crm-card p-3"><div class="text-muted">Курьеры</div><div class="h2 mb-0"><?= $couriersCount ?></div></div></div>
+        <div class="col-md-4"><div class="crm-card p-3"><div class="text-muted">Новости</div><div class="h2 mb-0"><?= $newsCount ?></div></div></div>
     </div>
 
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap gap-2">
         <a class="btn btn-warning btn-lg" href="/admin/recruiters">Рекрутеры</a>
         <a class="btn btn-outline-dark btn-lg" href="/admin/couriers">Курьеры</a>
+        <a class="btn btn-outline-dark btn-lg" href="/admin/news-create">Написать новость</a>
+        <a class="btn btn-outline-dark btn-lg" href="/admin/news">Управление новостями</a>
     </div>
 </div>
 </body>

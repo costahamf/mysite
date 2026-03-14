@@ -19,6 +19,8 @@ $stats = $statsStmt->fetch() ?: ['total_couriers' => 0, 'total_reward' => 0];
 $couriersStmt = $pdo->prepare('SELECT * FROM couriers WHERE recruiter_id = :id ORDER BY created_at DESC');
 $couriersStmt->execute([':id' => $recruiterId]);
 $couriers = $couriersStmt->fetchAll();
+
+$partnerLink = 'https://reg.eda.yandex.ru/?advertisement_campaign=forms_for_agents&user_invite_code=f570ca2872604481884bbe72291d8ec5&utm_content=blank';
 ?>
 <!doctype html>
 <html lang="ru">
@@ -56,9 +58,19 @@ $couriers = $couriersStmt->fetchAll();
 
     <div class="d-flex flex-wrap gap-2 mb-4">
         <a href="/dashboard/add-courier" class="btn btn-warning btn-lg">Добавить курьера</a>
-        <a href="https://reg.eda.yandex.ru/?advertisement_campaign=forms_for_agents&user_invite_code=f570ca2872604481884bbe72291d8ec5&utm_content=blank" target="_blank" class="btn btn-outline-dark btn-lg">Партнерская ссылка</a>
+        <button
+            type="button"
+            class="btn btn-outline-dark btn-lg"
+            data-copy-link="<?= h($partnerLink) ?>"
+            data-copy-message="Партнерская ссылка скопирована"
+        >
+            Партнерская ссылка
+        </button>
+        <a href="/news" class="btn btn-outline-dark btn-lg">Новости</a>
         <a href="https://t.me/YaEdaRekrut_bot" target="_blank" class="btn btn-outline-dark btn-lg">Поддержка</a>
     </div>
+
+    <div id="copy-feedback" class="alert alert-success d-none" role="alert"></div>
 
     <div class="table-responsive crm-card p-3">
         <table class="table table-striped align-middle mb-0">
@@ -97,5 +109,6 @@ $couriers = $couriersStmt->fetchAll();
         </table>
     </div>
 </div>
+<script src="/assets/js/app.js"></script>
 </body>
 </html>

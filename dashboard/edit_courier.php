@@ -10,7 +10,6 @@ if (($_SESSION['user']['role'] ?? '') !== 'recruiter') {
 }
 
 $id = (int) ($_GET['id'] ?? 0);
-$statuses = ['Приглашен в хаб', 'Принят', 'Отклонен'];
 
 $stmt = getPDO()->prepare('SELECT * FROM couriers WHERE id = :id AND recruiter_id = :recruiter_id LIMIT 1');
 $stmt->execute([':id' => $id, ':recruiter_id' => currentUserId()]);
@@ -27,28 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = trim($_POST['first_name'] ?? '');
     $city = trim($_POST['city'] ?? '');
     $inviteDate = trim($_POST['invite_date'] ?? date('Y-m-d'));
-    $ordersCount = (int) ($_POST['orders_count'] ?? 0);
-    $reward = (float) ($_POST['reward'] ?? 0);
-    $status = trim($_POST['status'] ?? 'Приглашен в хаб');
 
     if ($lastName === '' || $firstName === '' || $city === '') {
         $errors[] = 'Заполните обязательные поля.';
     }
 
-    if (!in_array($status, $statuses, true)) {
-        $errors[] = 'Некорректный статус.';
-    }
-
     if (!$errors) {
-        $update = getPDO()->prepare('UPDATE couriers SET last_name = :last_name, first_name = :first_name, city = :city, invite_date = :invite_date, orders_count = :orders_count, reward = :reward, status = :status WHERE id = :id AND recruiter_id = :recruiter_id');
+        $update = getPDO()->prepare('UPDATE couriers SET last_name = :last_name, first_name = :first_name, city = :city, invite_date = :invite_date WHERE id = :id AND recruiter_id = :recruiter_id');
         $update->execute([
             ':last_name' => $lastName,
             ':first_name' => $firstName,
             ':city' => $city,
             ':invite_date' => $inviteDate,
-            ':orders_count' => $ordersCount,
-            ':reward' => $reward,
-            ':status' => $status,
             ':id' => $id,
             ':recruiter_id' => currentUserId(),
         ]);
@@ -61,9 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'first_name' => $firstName,
         'city' => $city,
         'invite_date' => $inviteDate,
-        'orders_count' => $ordersCount,
-        'reward' => $reward,
-        'status' => $status,
     ]);
 }
 ?>
@@ -78,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="container py-4" style="max-width: 760px;">
-    <h1 class="h3 section-title mb-3">Редактирование курьера</h1>
+    <h1 class="h3 section-title mb-1">Редактирование курьера</h1>
+    <p class="text-muted">Статус, количество заказов и вознаграждение изменяются только администратором.</p>
 
     <?php foreach ($errors as $error): ?>
         <div class="alert alert-danger"><?= h($error) ?></div>
@@ -90,15 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-md-6"><input name="first_name" class="form-control form-control-lg" value="<?= h($courier['first_name']) ?>" required></div>
             <div class="col-md-6"><input name="city" class="form-control form-control-lg" value="<?= h($courier['city']) ?>" required></div>
             <div class="col-md-6"><input type="date" name="invite_date" class="form-control form-control-lg" value="<?= h($courier['invite_date']) ?>"></div>
-            <div class="col-md-6"><input type="number" min="0" name="orders_count" class="form-control form-control-lg" value="<?= (int) $courier['orders_count'] ?>"></div>
-            <div class="col-md-6"><input type="number" min="0" step="0.01" name="reward" class="form-control form-control-lg" value="<?= h((string) $courier['reward']) ?>"></div>
-            <div class="col-12">
-                <select name="status" class="form-select form-select-lg">
-                    <?php foreach ($statuses as $status): ?>
-                        <option value="<?= h($status) ?>" <?= $courier['status'] === $status ? 'selected' : '' ?>><?= h($status) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
         </div>
         <div class="d-flex gap-2 mt-4">
             <button class="btn btn-warning btn-lg" type="submit">Сохранить</button>

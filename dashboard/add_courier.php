@@ -9,16 +9,12 @@ if (($_SESSION['user']['role'] ?? '') !== 'recruiter') {
     redirect('/admin');
 }
 
-$statuses = ['Приглашен в хаб', 'Принят', 'Отклонен'];
 $errors = [];
 $data = [
     'last_name' => '',
     'first_name' => '',
     'city' => '',
     'invite_date' => date('Y-m-d'),
-    'orders_count' => 0,
-    'reward' => 0,
-    'status' => 'Приглашен в хаб',
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,10 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Заполните обязательные поля: фамилия, имя, город.';
     }
 
-    if (!in_array($data['status'], $statuses, true)) {
-        $errors[] = 'Некорректный статус.';
-    }
-
     if (!$errors) {
         $stmt = getPDO()->prepare('INSERT INTO couriers (recruiter_id, last_name, first_name, city, invite_date, orders_count, reward, status) VALUES (:recruiter_id, :last_name, :first_name, :city, :invite_date, :orders_count, :reward, :status)');
         $stmt->execute([
@@ -42,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':first_name' => $data['first_name'],
             ':city' => $data['city'],
             ':invite_date' => $data['invite_date'] ?: date('Y-m-d'),
-            ':orders_count' => (int) $data['orders_count'],
-            ':reward' => (float) $data['reward'],
-            ':status' => $data['status'],
+            ':orders_count' => 0,
+            ':reward' => 0,
+            ':status' => 'Приглашен в хаб',
         ]);
 
         redirect('/dashboard');
@@ -62,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="container py-4" style="max-width: 760px;">
-    <h1 class="h3 section-title mb-3">Добавление курьера</h1>
+    <h1 class="h3 section-title mb-1">Добавление курьера</h1>
+    <p class="text-muted">Статус, количество заказов и вознаграждение устанавливает администратор после проверки.</p>
 
     <?php foreach ($errors as $error): ?>
         <div class="alert alert-danger"><?= h($error) ?></div>
@@ -74,15 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-md-6"><input name="first_name" class="form-control form-control-lg" placeholder="Имя" value="<?= h($data['first_name']) ?>" required></div>
             <div class="col-md-6"><input name="city" class="form-control form-control-lg" placeholder="Город" value="<?= h($data['city']) ?>" required></div>
             <div class="col-md-6"><input type="date" name="invite_date" class="form-control form-control-lg" value="<?= h($data['invite_date']) ?>"></div>
-            <div class="col-md-6"><input type="number" min="0" name="orders_count" class="form-control form-control-lg" placeholder="Количество заказов" value="<?= h((string) $data['orders_count']) ?>"></div>
-            <div class="col-md-6"><input type="number" min="0" step="0.01" name="reward" class="form-control form-control-lg" placeholder="Вознаграждение" value="<?= h((string) $data['reward']) ?>"></div>
-            <div class="col-12">
-                <select name="status" class="form-select form-select-lg">
-                    <?php foreach ($statuses as $status): ?>
-                        <option value="<?= h($status) ?>" <?= $data['status'] === $status ? 'selected' : '' ?>><?= h($status) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
         </div>
         <div class="d-flex gap-2 mt-4">
             <button class="btn btn-warning btn-lg" type="submit">Сохранить</button>

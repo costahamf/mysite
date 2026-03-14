@@ -25,6 +25,16 @@ CREATE TABLE IF NOT EXISTS couriers (
     CONSTRAINT fk_couriers_recruiter FOREIGN KEY (recruiter_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS news (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    author_id INT UNSIGNED NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    image_path VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_news_author FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 -- Администратор по умолчанию (пароль: admin12345)
 INSERT INTO users (name, phone, email, password, role)
 VALUES ('Администратор', NULL, 'admin@example.com', '$2y$12$kezuM6nLMvhGlxnl9p9vE.K12BIQ.a6cRPqss96qvWZrOzUBOx/Vm', 'admin')

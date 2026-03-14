@@ -42,6 +42,9 @@ $recruiters = getPDO()->query($sql)->fetchAll();
                     <td><?= h($recruiter['email']) ?></td>
                     <td><?= h($recruiter['created_at']) ?></td>
                     <td><?= (int) $recruiter['couriers_count'] ?></td>
+                    <td>
+                        <a href="/admin/couriers?recruiter_id=<?= (int) $recruiter['id'] ?>" class="btn btn-sm btn-dark">Показать всех курьеров</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
