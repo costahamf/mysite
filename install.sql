@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(150) UNIQUE NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('recruiter','admin') NOT NULL DEFAULT 'recruiter',
+    last_seen_news_id INT UNSIGNED NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -33,6 +34,19 @@ CREATE TABLE IF NOT EXISTS news (
     image_path VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_news_author FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS payout_requests (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    recruiter_id INT UNSIGNED NOT NULL,
+    full_name VARCHAR(150) NOT NULL,
+    requisites TEXT NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+    admin_comment TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_at DATETIME NULL,
+    CONSTRAINT fk_payout_recruiter FOREIGN KEY (recruiter_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- Администратор по умолчанию (пароль: admin12345)

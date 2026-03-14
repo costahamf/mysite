@@ -38,7 +38,7 @@ if ($recruiterId > 0) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
+<body class="app-bg">
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
@@ -76,7 +76,10 @@ if ($recruiterId > 0) {
                     <td><?= (int) $courier['orders_count'] ?></td>
                     <td><?= number_format((float) $courier['reward'], 0, ',', ' ') ?> ₽</td>
                     <td><?= h($courier['status']) ?></td>
-                    <td><a class="btn btn-sm btn-dark" href="/admin/edit-status?id=<?= (int) $courier['id'] ?>">Редактировать</a></td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-sm btn-dark" href="/admin/edit-status?id=<?= (int) $courier['id'] ?>">Изменить</a>
+                        <a class="btn btn-sm btn-outline-danger" href="/admin/delete-courier?id=<?= (int) $courier['id'] ?>" onclick="return confirm('Удалить курьера?')">Удалить</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

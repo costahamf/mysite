@@ -5,10 +5,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/init.php';
 requireAdmin();
 
-$errors = [];
-$title = '';
-$content = '';
-
 function processNewsImageUpload(array $file, array &$errors): ?string
 {
     if ((int) $file['error'] === UPLOAD_ERR_NO_FILE) {
@@ -62,29 +58,53 @@ function processNewsImageUpload(array $file, array &$errors): ?string
     return '/uploads/news/' . $fileName;
 }
 
+$id = (int) ($_GET['id'] ?? 0);
+$stmt = getPDO()->prepare('SELECT * FROM news WHERE id = :id LIMIT 1');
+$stmt->execute([':id' => $id]);
+$news = $stmt->fetch();
+
+if (!$news) {
+    exit('Новость не найдена.');
+}
+
+$errors = [];
+$title = $news['title'];
+$content = $news['content'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $content = trim($_POST['content'] ?? '');
-    $imagePath = null;
+    $deleteImage = (isset($_POST['delete_image']) && $_POST['delete_image'] === '1');
+    $newImagePath = null;
 
     if ($title === '' || $content === '') {
         $errors[] = 'Введите заголовок и текст новости.';
     }
 
     if (isset($_FILES['image'])) {
-        $imagePath = processNewsImageUpload($_FILES['image'], $errors);
+        $newImagePath = processNewsImageUpload($_FILES['image'], $errors);
     }
 
     if (!$errors) {
-        $stmt = getPDO()->prepare('INSERT INTO news (author_id, title, content, image_path) VALUES (:author_id, :title, :content, :image_path)');
-        $stmt->execute([
-            ':author_id' => currentUserId(),
+        $imagePath = $news['image_path'];
+
+        if ($deleteImage) {
+            $imagePath = null;
+        }
+
+        if ($newImagePath !== null) {
+            $imagePath = $newImagePath;
+        }
+
+        $update = getPDO()->prepare('UPDATE news SET title = :title, content = :content, image_path = :image_path WHERE id = :id');
+        $update->execute([
             ':title' => $title,
             ':content' => $content,
             ':image_path' => $imagePath,
+            ':id' => $id,
         ]);
 
-        $_SESSION['success'] = 'Новость опубликована.';
+        $_SESSION['success'] = 'Новость обновлена.';
         redirect('/admin/news');
     }
 }
@@ -94,15 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Написать новость</title>
+    <title>Изменить новость</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body class="app-bg">
 <div class="container py-4" style="max-width: 920px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 section-title mb-0">Написать новость</h1>
-        <a href="/admin" class="btn btn-outline-dark">Назад</a>
+        <h1 class="h3 section-title mb-0">Изменить новость</h1>
+        <a href="/admin/news" class="btn btn-outline-dark">Назад</a>
     </div>
 
     <?php foreach ($errors as $error): ?>
@@ -118,12 +138,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Текст новости</label>
             <textarea name="content" rows="7" class="form-control" required><?= h($content) ?></textarea>
         </div>
+        <?php if (!empty($news['image_path'])): ?>
+            <div class="mb-3">
+                <img src="<?= h($news['image_path']) ?>" alt="Текущее фото" class="img-fluid news-image mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="delete_image" name="delete_image">
+                    <label class="form-check-label" for="delete_image">Удалить текущее фото</label>
+                </div>
+            </div>
+        <?php endif; ?>
         <div class="mb-3">
-            <label class="form-label">Фото (опционально)</label>
+            <label class="form-label">Новое фото (опционально)</label>
             <input type="file" name="image" class="form-control" accept="image/png,image/jpeg,image/webp">
-            <div class="form-text">Идеальный размер: 1200x1200px (1:1). Рекомендуется квадрат для ровного отображения. Форматы: JPG, PNG, WEBP. До 5 МБ.</div>
         </div>
-        <button class="btn btn-warning btn-lg" type="submit">Опубликовать</button>
+        <button class="btn btn-warning btn-lg" type="submit">Сохранить изменения</button>
     </form>
 </div>
 </body>

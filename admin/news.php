@@ -20,12 +20,12 @@ $newsList = $stmt->fetchAll();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
+<body class="app-bg">
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3 section-title mb-0">Новости</h1>
         <div class="d-flex gap-2">
-            <a href="/admin/news-create" class="btn btn-warning">Написать новость</a>
+            <a href="/admin/news_create" class="btn btn-warning">Написать новость</a>
             <a href="/admin" class="btn btn-outline-dark">Назад</a>
         </div>
     </div>
@@ -47,9 +47,13 @@ $newsList = $stmt->fetchAll();
                         <small class="text-muted"><?= h($item['created_at']) ?> · <?= h($item['author_name']) ?></small>
                     </div>
                     <?php if (!empty($item['image_path'])): ?>
-                        <img src="<?= h($item['image_path']) ?>" alt="Фото к новости" class="img-fluid rounded mb-3" style="max-height: 360px; object-fit: cover; width: 100%;">
+                        <img src="<?= h($item['image_path']) ?>" alt="Фото к новости" class="img-fluid news-image mb-3">
                     <?php endif; ?>
-                    <div style="white-space: pre-wrap;"><?= h($item['content']) ?></div>
+                    <div style="white-space: pre-wrap;" class="mb-3"><?= h($item['content']) ?></div>
+                    <div class="d-flex gap-2">
+                        <a href="/admin/news_edit?id=<?= (int) $item['id'] ?>" class="btn btn-sm btn-outline-dark">Изменить</a>
+                        <a href="/admin/news_delete?id=<?= (int) $item['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить новость?')">Удалить</a>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>

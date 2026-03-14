@@ -5,8 +5,18 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config/init.php';
 requireAuth();
 
-$stmt = getPDO()->query('SELECT n.*, u.name AS author_name FROM news n INNER JOIN users u ON u.id = n.author_id ORDER BY n.created_at DESC');
+$pdo = getPDO();
+$stmt = $pdo->query('SELECT n.*, u.name AS author_name FROM news n INNER JOIN users u ON u.id = n.author_id ORDER BY n.created_at DESC');
 $newsList = $stmt->fetchAll();
+
+if (dbHasColumn('users', 'last_seen_news_id')) {
+    $maxNewsId = (int) $pdo->query('SELECT COALESCE(MAX(id), 0) FROM news')->fetchColumn();
+    $update = $pdo->prepare('UPDATE users SET last_seen_news_id = :last_seen_news_id WHERE id = :id');
+    $update->execute([
+        ':last_seen_news_id' => $maxNewsId,
+        ':id' => currentUserId(),
+    ]);
+}
 ?>
 <!doctype html>
 <html lang="ru">
@@ -17,8 +27,8 @@ $newsList = $stmt->fetchAll();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg bg-warning">
+<body class="app-bg">
+<nav class="navbar navbar-expand-lg bg-warning shadow-sm">
     <div class="container">
         <span class="navbar-brand">Новости CRM</span>
         <div class="d-flex gap-2">
@@ -46,7 +56,7 @@ $newsList = $stmt->fetchAll();
                         <small class="text-muted"><?= h($item['created_at']) ?> · <?= h($item['author_name']) ?></small>
                     </div>
                     <?php if (!empty($item['image_path'])): ?>
-                        <img src="<?= h($item['image_path']) ?>" alt="Фото к новости" class="img-fluid rounded mb-3" style="max-height: 360px; object-fit: cover; width: 100%;">
+                        <img src="<?= h($item['image_path']) ?>" alt="Фото к новости" class="img-fluid news-image mb-3">
                     <?php endif; ?>
                     <div style="white-space: pre-wrap;"><?= h($item['content']) ?></div>
                 </div>
