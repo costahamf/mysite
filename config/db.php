@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-const DB_HOST = 'localhost';
-const DB_NAME = 'courier_crm';
-const DB_USER = 'root';
-const DB_PASS = '';
+const DB_HOST = '127.0.0.1';      // Точно как в панели
+const DB_PORT = '3308';            // Порт из панели
+const DB_NAME = 'costahamf';       // Имя базы
+const DB_USER = 'costahamf';       // Логин
+const DB_PASS = 'Costa132465';     // Пароль
 const DB_CHARSET = 'utf8mb4';
 
 function getPDO(): PDO
@@ -16,7 +17,8 @@ function getPDO(): PDO
         return $pdo;
     }
 
-    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+    // ВАЖНО: используем хост и порт из панели
+    $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
 
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -24,7 +26,11 @@ function getPDO(): PDO
         PDO::ATTR_EMULATE_PREPARES => false,
     ];
 
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
-
-    return $pdo;
+    try {
+        $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+        return $pdo;
+    } catch (PDOException $e) {
+        // Временно покажем ошибку
+        die('Ошибка подключения к БД: ' . $e->getMessage());
+    }
 }
