@@ -1,0 +1,30 @@
+RewriteEngine On
+
+RewriteRule ^register$ auth/register.php [L,QSA]
+RewriteRule ^login$ auth/login.php [L,QSA]
+RewriteRule ^logout$ auth/logout.php [L,QSA]
+RewriteRule ^forgot-password$ auth/forgot_password.php [L,QSA]
+RewriteRule ^reset-password$ auth/reset_password.php [L,QSA]
+
+RewriteRule ^terms$ terms.php [L,QSA]
+RewriteRule ^privacy$ privacy.php [L,QSA]
+
+RewriteRule ^dashboard$ dashboard/index.php [L,QSA]
+RewriteRule ^dashboard/add-courier$ dashboard/add_courier.php [L,QSA]
+RewriteRule ^dashboard/edit-courier$ dashboard/edit_courier.php [L,QSA]
+RewriteRule ^dashboard/delete-courier$ dashboard/delete_courier.php [L,QSA]
+RewriteRule ^dashboard/withdraw$ dashboard/withdraw.php [L,QSA]
+
+RewriteRule ^news$ news/index.php [L,QSA]
+
+RewriteRule ^admin$ admin/index.php [L,QSA]
+RewriteRule ^admin/recruiters$ admin/recruiters.php [L,QSA]
+RewriteRule ^admin/couriers$ admin/couriers.php [L,QSA]
+RewriteRule ^admin/delete-courier$ admin/delete_courier.php [L,QSA]
+RewriteRule ^admin/edit-status$ admin/edit_status.php [L,QSA]
+RewriteRule ^admin/news$ admin/news.php [L,QSA]
+RewriteRule ^admin/news_create$ admin/news_create.php [L,QSA]
+RewriteRule ^admin/news_edit$ admin/news_edit.php [L,QSA]
+RewriteRule ^admin/news_delete$ admin/news_delete.php [L,QSA]
+RewriteRule ^admin/payouts$ admin/payouts.php [L,QSA]
+RewriteRule ^admin/payout-action$ admin/payout_action.php [L,QSA]
