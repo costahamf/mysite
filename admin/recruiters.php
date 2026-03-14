@@ -32,17 +32,7 @@ $recruiters = getPDO()->query($sql)->fetchAll();
 
     <div class="table-responsive crm-card p-3">
         <table class="table table-striped align-middle mb-0">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>ФИО</th>
-                <th>Телефон</th>
-                <th>Email</th>
-                <th>Дата регистрации</th>
-                <th>Количество курьеров</th>
-                <th>Действие</th>
-            </tr>
-            </thead>
+            <thead><tr><th>ID</th><th>ФИО</th><th>Телефон</th><th>Email</th><th>Дата регистрации</th><th>Количество курьеров</th></tr></thead>
             <tbody>
             <?php foreach ($recruiters as $recruiter): ?>
                 <tr>
