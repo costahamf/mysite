@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-const DB_HOST = 'localhost';
-const DB_NAME = 'courier_crm';
-const DB_USER = 'root';
-const DB_PASS = '';
+const DB_HOST = '127.0.0.1';      // Точно как в панели
+const DB_PORT = '3308';            // Порт из панели
+const DB_NAME = 'costahamf';       // Имя базы
+const DB_USER = 'costahamf';       // Логин
+const DB_PASS = 'Costa132465';     // Пароль
 const DB_CHARSET = 'utf8mb4';
 
 function getPDO(): PDO
