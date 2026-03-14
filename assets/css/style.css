@@ -332,3 +332,17 @@ textarea:focus {
         width: 92vw !important;
     }
 }
+
+.legal-box {
+    background: #fffdf4;
+    border-color: #f7dfa0;
+}
+
+.legal-link {
+    color: #FDB913;
+    font-weight: 700;
+}
+
+.legal-link:hover {
+    color: #e29d04;
+}

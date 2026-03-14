@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(150) UNIQUE NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('recruiter','admin') NOT NULL DEFAULT 'recruiter',
+    accepted_terms_at DATETIME NULL,
+    accepted_privacy_at DATETIME NULL,
     last_seen_news_id INT UNSIGNED NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;

@@ -53,6 +53,8 @@
 Если CRM уже была установлена ранее, не обязательно пересоздавать БД. Выполните SQL:
 
 ```sql
+ALTER TABLE users ADD COLUMN accepted_terms_at DATETIME NULL;
+ALTER TABLE users ADD COLUMN accepted_privacy_at DATETIME NULL;
 ALTER TABLE users ADD COLUMN last_seen_news_id INT UNSIGNED NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS payout_requests (
