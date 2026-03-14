@@ -130,7 +130,7 @@ $availableBalance = getRecruiterAvailableBalance($recruiterId);
     </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="newsOffcanvas" aria-labelledby="newsOffcanvasLabel">
+<div class="offcanvas offcanvas-end news-offcanvas" tabindex="-1" id="newsOffcanvas" aria-labelledby="newsOffcanvasLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="newsOffcanvasLabel">Новости</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -145,7 +145,7 @@ $availableBalance = getRecruiterAvailableBalance($recruiterId);
                         <?php foreach ($newsList as $i => $item): ?>
                             <button
                                 type="button"
-                                class="list-group-item list-group-item-action news-select-btn <?= $i === 0 ? 'active' : '' ?>"
+                                class="list-group-item list-group-item-action news-select-btn news-select-item <?= $i === 0 ? 'active' : '' ?>"
                                 data-news-title="<?= h($item['title']) ?>"
                                 data-news-content="<?= h($item['content']) ?>"
                                 data-news-date="<?= h($item['created_at']) ?>"
