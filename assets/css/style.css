@@ -1,0 +1,36 @@
+:root {
+    --yellow: #FFD600;
+    --black: #000000;
+    --white: #FFFFFF;
+}
+
+body {
+    background-color: var(--white);
+    color: var(--black);
+}
+
+.navbar-brand,
+.btn-warning {
+    font-weight: 700;
+}
+
+.btn-warning {
+    color: var(--black);
+}
+
+.crm-card {
+    border: 2px solid var(--black);
+    border-radius: 14px;
+}
+
+.table thead {
+    background-color: var(--yellow);
+}
+
+.badge-status {
+    font-size: 0.9rem;
+}
+
+.section-title {
+    font-weight: 800;
+}
