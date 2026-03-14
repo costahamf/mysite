@@ -49,6 +49,20 @@ CREATE TABLE IF NOT EXISTS password_reset_codes (
     CONSTRAINT fk_reset_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+
+CREATE TABLE IF NOT EXISTS rates (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    city VARCHAR(120) NOT NULL,
+    lead_type VARCHAR(120) NOT NULL,
+    registered_from DATE NOT NULL,
+    registered_to DATE NOT NULL,
+    min_orders_cd INT UNSIGNED NOT NULL DEFAULT 0,
+    cd_threshold DECIMAL(10,2) NOT NULL DEFAULT 0,
+    order_rate_over_cd DECIMAL(10,2) NOT NULL DEFAULT 0,
+    max_income_per_courier DECIMAL(10,2) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS payout_requests (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     recruiter_id INT UNSIGNED NOT NULL,

@@ -12,7 +12,10 @@
   - таблица только своих курьеров;
   - статистика по заработку;
   - кнопка новостей с индикатором новых;
-  - вывод средств (заявка + история).
+  - вывод средств (заявка + история);
+  - быстрые ссылки на страницы «Ставки» и «Информация».
+- Страница «Ставки» (`/rates`) для просмотра актуальных ставок.
+- Страница «Информация» (`/info`) под общий контент (инструкции/регламенты/FAQ).
 - Новости:
   - в кабинете рекрутера новости открываются справа в боковой панели (offcanvas) через кнопку-колокольчик;
   - пишет/редактирует/удаляет только админ;
@@ -21,7 +24,40 @@
 - Админ-панель (`/admin`):
   - рекрутеры и курьеры;
   - управление новостями;
-  - проверка выплат (одобрить/отказать с комментарием).
+  - проверка выплат (одобрить/отказать с комментарием);
+  - управление ставками с быстрым массовым импортом.
+
+## Управление ставками (для админа)
+
+Страница: `/admin/rates`.
+
+Поддерживаются 2 формата вставки:
+
+1. **Построчно** (одна ставка в строке, разделители `TAB`/`;`/`|`)
+2. **Вертикальным блоком** (по 8 строк на 1 ставку), например:
+
+```text
+Елабуга
+Курьер
+16.03.2026
+29.03.2026
+1
+1000
+200.00
+26000.00
+```
+
+Поля в порядке:
+1) Город
+2) Тип лида
+3) Зарегистрирован с
+4) Зарегистрирован до
+5) Мин. заказы (ЦД)
+6) ЦД
+7) Ставка за каждый заказ (сверх ЦД)
+8) Максимальный доход за 1 курьера
+
+Есть опция «Очистить старые ставки перед загрузкой».
 
 ## Логотип
 
@@ -92,6 +128,19 @@ CREATE TABLE IF NOT EXISTS password_reset_codes (
     CONSTRAINT fk_reset_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS rates (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    city VARCHAR(120) NOT NULL,
+    lead_type VARCHAR(120) NOT NULL,
+    registered_from DATE NOT NULL,
+    registered_to DATE NOT NULL,
+    min_orders_cd INT UNSIGNED NOT NULL DEFAULT 0,
+    cd_threshold DECIMAL(10,2) NOT NULL DEFAULT 0,
+    order_rate_over_cd DECIMAL(10,2) NOT NULL DEFAULT 0,
+    max_income_per_courier DECIMAL(10,2) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS payout_requests (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     recruiter_id INT UNSIGNED NOT NULL,
@@ -119,7 +168,7 @@ CREATE TABLE IF NOT EXISTS payout_requests (
 - `auth/` — регистрация/вход/выход/восстановление пароля.
 - `dashboard/` — кабинет рекрутера и вывод средств.
 - `news/` — страница новостей.
-- `admin/` — админ-панель, новости, выплаты.
+- `admin/` — админ-панель, новости, выплаты, ставки.
 - `uploads/news/` — изображения новостей.
 - `assets/` — стили, JS и логотип.
 - `install.sql` — схема БД.

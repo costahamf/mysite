@@ -85,6 +85,8 @@ $availableBalance = getRecruiterAvailableBalance($recruiterId);
             Партнерская ссылка
         </button>
 
+        <a href="/rates" class="btn btn-outline-dark btn-lg">Ставки</a>
+        <a href="/info" class="btn btn-outline-dark btn-lg">Информация</a>
         <button class="btn btn-outline-dark btn-lg position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#newsOffcanvas" aria-controls="newsOffcanvas">
             🔔 Новости
             <?php if ($unreadNews > 0): ?>

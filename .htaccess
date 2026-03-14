@@ -8,6 +8,8 @@ RewriteRule ^reset-password$ auth/reset_password.php [L,QSA]
 
 RewriteRule ^terms$ terms.php [L,QSA]
 RewriteRule ^privacy$ privacy.php [L,QSA]
+RewriteRule ^rates$ rates.php [L,QSA]
+RewriteRule ^info$ info.php [L,QSA]
 
 RewriteRule ^dashboard$ dashboard/index.php [L,QSA]
 RewriteRule ^dashboard/add-courier$ dashboard/add_courier.php [L,QSA]
@@ -28,3 +30,4 @@ RewriteRule ^admin/news_edit$ admin/news_edit.php [L,QSA]
 RewriteRule ^admin/news_delete$ admin/news_delete.php [L,QSA]
 RewriteRule ^admin/payouts$ admin/payouts.php [L,QSA]
 RewriteRule ^admin/payout-action$ admin/payout_action.php [L,QSA]
+RewriteRule ^admin/rates$ admin/rates.php [L,QSA]

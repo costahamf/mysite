@@ -46,6 +46,8 @@ if (dbHasColumn('payout_requests', 'id')) {
         <a class="btn btn-outline-dark btn-lg" href="/admin/payouts">Проверка выплат</a>
         <a class="btn btn-outline-dark btn-lg" href="/admin/news_create">Написать новость</a>
         <a class="btn btn-outline-dark btn-lg" href="/admin/news">Управление новостями</a>
+        <a class="btn btn-outline-dark btn-lg" href="/admin/rates">Ставки</a>
+        <a class="btn btn-outline-dark btn-lg" href="/info">Информация</a>
     </div>
 </div>
 </body>
