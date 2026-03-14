@@ -3,6 +3,8 @@ RewriteEngine On
 RewriteRule ^register$ auth/register.php [L,QSA]
 RewriteRule ^login$ auth/login.php [L,QSA]
 RewriteRule ^logout$ auth/logout.php [L,QSA]
+RewriteRule ^forgot-password$ auth/forgot_password.php [L,QSA]
+RewriteRule ^reset-password$ auth/reset_password.php [L,QSA]
 
 RewriteRule ^terms$ terms.php [L,QSA]
 RewriteRule ^privacy$ privacy.php [L,QSA]

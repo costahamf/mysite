@@ -81,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <button class="btn btn-warning btn-lg w-100" type="submit">Войти</button>
         </form>
-        <p class="mt-3 mb-0">Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+        <p class="mt-3 mb-1">Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+        <p class="mb-0"><a href="/forgot-password">Забыли пароль?</a></p>
     </div>
 </div>
 </body>

@@ -8,6 +8,10 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 require_once __DIR__ . '/db.php';
 
+const APP_URL = 'https://partner-yaedalavka.ru';
+const MAIL_FROM = 'no-reply@partner-yaedalavka.ru';
+const MAIL_FROM_NAME = 'Partner YaEda CRM';
+
 function h(?string $value): string
 {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -104,4 +108,18 @@ function getUnreadNewsCount(int $userId): int
     $lastSeen = (int) $stmt->fetchColumn();
 
     return max(0, $maxNewsId - $lastSeen);
+}
+
+function sendSystemEmail(string $to, string $subject, string $message): bool
+{
+    $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+    $headers = [
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . MAIL_FROM_NAME . ' <' . MAIL_FROM . '>',
+        'Reply-To: ' . MAIL_FROM,
+        'X-Mailer: PHP/' . phpversion(),
+    ];
+
+    return mail($to, $encodedSubject, $message, implode("\r\n", $headers));
 }

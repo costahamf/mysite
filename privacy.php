@@ -7,38 +7,9 @@ declare(strict_types=1);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Согласие на обработку персональных данных</title>
+    <title>Согласие на обработку ПД</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
-    <style>
-        .agreement-content {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #333;
-        }
-        .agreement-content h2 {
-            font-size: 1.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        .agreement-content h3 {
-            font-size: 1.1rem;
-            margin-top: 1.2rem;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-        }
-        .agreement-content p {
-            margin-bottom: 1rem;
-        }
-        .agreement-content ul, .agreement-content ol {
-            margin-bottom: 1rem;
-            padding-left: 1.5rem;
-        }
-        .agreement-content li {
-            margin-bottom: 0.3rem;
-        }
-    </style>
 </head>
 <body class="app-bg">
 <div class="container py-4" style="max-width: 900px;">

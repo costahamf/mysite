@@ -5,6 +5,7 @@
 ## Функционал
 
 - Регистрация/авторизация (`/register`, `/login`).
+- Восстановление пароля по email-коду (`/forgot-password`, `/reset-password`).
 - Роли: `recruiter`, `admin`.
 - Кабинет рекрутера (`/dashboard`):
   - добавление курьеров;
@@ -39,6 +40,30 @@
 Формат: PNG, 1024x1024.
 ```
 
+## Настройка почты для восстановления пароля
+
+Восстановление пароля использует отправку кода через PHP `mail()`.
+
+1. В `config/init.php` проверьте и укажите:
+   - `APP_URL` — адрес вашего сайта;
+   - `MAIL_FROM` — адрес отправителя (например, `no-reply@partner-yaedalavka.ru`);
+   - `MAIL_FROM_NAME` — имя отправителя.
+2. Создайте почтовый ящик `no-reply@вашдомен` в панели хостинга.
+3. На хостинге убедитесь, что функция `mail()` работает для вашего домена.
+4. Проверьте, что домен отправителя совпадает с вашим сайтом (это уменьшает попадание в спам).
+5. Если письма не приходят:
+   - проверьте папку «Спам»;
+   - проверьте логи почты в панели хостинга;
+   - при необходимости используйте SMTP-библиотеку (PHPMailer) вместо `mail()`.
+
+### Логика восстановления пароля
+
+- Пользователь вводит email на `/forgot-password`.
+- Система генерирует 6-значный код и отправляет письмо.
+- Код хранится в таблице `password_reset_codes` в виде хеша, срок действия — 15 минут.
+- На `/reset-password` пользователь вводит email, код и новый пароль.
+- После успешной проверки код помечается использованным, пароль обновляется.
+
 ## Установка на хостинг
 
 1. Создайте базу MySQL.
@@ -57,6 +82,16 @@ ALTER TABLE users ADD COLUMN accepted_terms_at DATETIME NULL;
 ALTER TABLE users ADD COLUMN accepted_privacy_at DATETIME NULL;
 ALTER TABLE users ADD COLUMN last_seen_news_id INT UNSIGNED NOT NULL DEFAULT 0;
 
+CREATE TABLE IF NOT EXISTS password_reset_codes (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNSIGNED NOT NULL,
+    code_hash VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    used_at DATETIME NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_reset_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS payout_requests (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     recruiter_id INT UNSIGNED NOT NULL,
@@ -71,7 +106,7 @@ CREATE TABLE IF NOT EXISTS payout_requests (
 ) ENGINE=InnoDB;
 ```
 
-> Если `last_seen_news_id` уже существует, пропустите `ALTER TABLE`.
+> Если часть колонок/таблиц уже существует, повторно не создавайте их.
 
 ## Доступ админа по умолчанию
 
@@ -81,7 +116,7 @@ CREATE TABLE IF NOT EXISTS payout_requests (
 ## Структура проекта
 
 - `config/` — подключение БД и инициализация.
-- `auth/` — регистрация/вход/выход.
+- `auth/` — регистрация/вход/выход/восстановление пароля.
 - `dashboard/` — кабинет рекрутера и вывод средств.
 - `news/` — страница новостей.
 - `admin/` — админ-панель, новости, выплаты.
