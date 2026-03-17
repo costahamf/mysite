@@ -18,10 +18,33 @@ $newsList = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управление новостями</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body class="app-bg">
-<div class="container py-4">
+<body class="app-bg app-modern">
+<nav class="navbar navbar-modern sticky-top">
+    <div class="container modern-container d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+            <a href="/admin" class="navbar-brand-modern text-decoration-none">
+                <img src="/assets/img/logo.png" alt="Яндекс Еда" class="app-logo" onerror="this.style.display='none'">
+                <span>Админ панель</span>
+            </a>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="/admin" class="top-nav-link"><i class="fas fa-gauge"></i>Дашборд</a>
+                <a href="/admin/recruiters" class="top-nav-link"><i class="fas fa-users"></i>Рекрутеры</a>
+                <a href="/admin/couriers" class="top-nav-link"><i class="fas fa-truck"></i>Курьеры</a>
+                <a href="/admin/payouts" class="top-nav-link"><i class="fas fa-wallet"></i>Выплаты</a>
+                <a href="/admin/news" class="top-nav-link"><i class="fas fa-newspaper"></i>Новости</a>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="/info" class="btn btn-outline-light">Информация</a>
+            <a href="/logout" class="btn btn-warning">Выйти</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container modern-container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3 section-title mb-0">Новости</h1>
         <div class="d-flex gap-2">
