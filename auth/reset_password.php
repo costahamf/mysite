@@ -76,9 +76,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body class="app-bg">
-<div class="container py-5" style="max-width: 640px;">
-    <div class="crm-card p-4">
+<body class="app-bg app-modern auth-page">
+<div class="container py-5 auth-container">
+    <div class="crm-card p-4 auth-card">
+        <div class="auth-brand mb-3"><img src="/assets/img/logo.png" alt="Яндекс Еда" class="app-logo" onerror="this.style.display='none'"><span>Яндекс Еда CRM</span></div>
         <h1 class="h4 section-title mb-3">Подтверждение кода</h1>
         <p class="text-muted">Введите код из письма и задайте новый пароль.</p>
 

@@ -16,6 +16,10 @@ $statsStmt = $pdo->prepare('SELECT COUNT(*) AS total_couriers, COALESCE(SUM(rewa
 $statsStmt->execute([':id' => $recruiterId]);
 $stats = $statsStmt->fetch() ?: ['total_couriers' => 0, 'total_reward' => 0];
 
+$monthlyStmt = $pdo->prepare('SELECT COUNT(*) FROM couriers WHERE recruiter_id = :id AND invite_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)');
+$monthlyStmt->execute([':id' => $recruiterId]);
+$monthlyGrowth = (int) $monthlyStmt->fetchColumn();
+
 $couriersStmt = $pdo->prepare('SELECT * FROM couriers WHERE recruiter_id = :id ORDER BY created_at DESC');
 $couriersStmt->execute([':id' => $recruiterId]);
 $couriers = $couriersStmt->fetchAll();
@@ -45,7 +49,7 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
         <div class="d-flex align-items-center gap-4 flex-wrap">
             <a href="/dashboard" class="navbar-brand-modern text-decoration-none">
                 <img src="/assets/img/logo.png" alt="Яндекс Еда" class="app-logo" onerror="this.style.display='none'">
-                <span>Личный кабинет</span>
+                <span>Яндекс Еда</span>
             </a>
             <div class="d-flex align-items-center gap-2 flex-wrap">
                 <a href="/dashboard" class="top-nav-link active"><i class="fas fa-house"></i>Главная</a>
@@ -63,11 +67,19 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
                     </span>
                 <?php endif; ?>
             </button>
-            <div class="user-chip">
-                <span class="user-avatar"><?= h($userInitial) ?></span>
-                <span class="text-white fw-semibold d-none d-md-inline"><?= h($userName) ?></span>
+            <div class="dropdown">
+                <button class="user-chip border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="user-avatar"><?= h($userInitial) ?></span>
+                    <span class="text-white fw-semibold d-none d-md-inline"><?= h($userName) ?></span>
+                    <i class="fas fa-chevron-down text-white small"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#">Профиль</a></li>
+                    <li><a class="dropdown-item" href="#">Настройки</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout">Выйти</a></li>
+                </ul>
             </div>
-            <a href="/logout" class="btn btn-warning"><i class="fas fa-right-from-bracket"></i>Выйти</a>
         </div>
     </div>
 </nav>
@@ -88,6 +100,7 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
             <div>
                 <div class="stat-label">Всего курьеров</div>
                 <div class="stat-value"><?= (int) $stats['total_couriers'] ?></div>
+                <div class="stat-trend">+<?= $monthlyGrowth ?> за месяц</div>
             </div>
         </article>
         <article class="stat-card">
@@ -95,6 +108,7 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
             <div>
                 <div class="stat-label">Общий заработок</div>
                 <div class="stat-value"><?= number_format((float) $stats['total_reward'], 0, ',', ' ') ?> ₽</div>
+                <div class="stat-trend">С начала сотрудничества</div>
             </div>
         </article>
         <article class="stat-card">
@@ -102,6 +116,7 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
             <div>
                 <div class="stat-label">Доступно к выводу</div>
                 <div class="stat-value"><?= number_format($availableBalance, 0, ',', ' ') ?> ₽</div>
+                <div class="stat-trend">Минимальная сумма 1000 ₽</div>
             </div>
         </article>
     </div>
@@ -110,11 +125,11 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
         <div class="quick-actions-title"><i class="fas fa-bolt"></i>Быстрые действия</div>
         <div class="actions-grid">
             <a href="/dashboard/add-courier" class="action-item"><span class="action-icon"><i class="fas fa-user-plus"></i></span><span>Добавить курьера</span></a>
-            <a href="/dashboard/withdraw" class="action-item"><span class="action-icon"><i class="fas fa-money-bill-transfer"></i></span><span>Вывод средств</span></a>
-            <button type="button" class="action-item" data-copy-link="<?= h($partnerLink) ?>" data-copy-message="Партнерская ссылка скопирована">
+            <a href="/dashboard/withdraw" class="action-item"><span class="action-icon"><i class="fas fa-arrow-up"></i></span><span>Вывод средств</span></a>
+            <button type="button" class="action-item" data-copy-link="<?= h($partnerLink) ?>" data-copy-message="🔗 Партнерская ссылка скопирована">
                 <span class="action-icon"><i class="fas fa-link"></i></span><span>Партнерская ссылка</span>
             </button>
-            <a href="/rates" class="action-item"><span class="action-icon"><i class="fas fa-chart-column"></i></span><span>Ставки</span></a>
+            <a href="/rates" class="action-item"><span class="action-icon"><i class="fas fa-chart-column"></i></span><span>Ставки</span><span class="action-badge">new</span></a>
             <a href="/info" class="action-item"><span class="action-icon"><i class="fas fa-book"></i></span><span>Информация</span></a>
         </div>
     </div>
@@ -122,8 +137,14 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
     <div id="copy-feedback" class="alert alert-success d-none" role="alert"></div>
 
     <section class="table-section">
-        <div class="table-header">
+        <div class="table-header d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h2 class="h5 mb-0"><i class="fas fa-truck-fast me-2 text-warning"></i>Список курьеров</h2>
+            <div class="table-filters">
+                <button type="button" class="filter-btn active">Все</button>
+                <button type="button" class="filter-btn">Активные</button>
+                <button type="button" class="filter-btn">На рассмотрении</button>
+                <button type="button" class="filter-btn">Архив</button>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table align-middle mb-0">
@@ -149,7 +170,7 @@ $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
                         <td><?= h($courier['city']) ?></td>
                         <td><?= date('d.m.Y', strtotime((string) $courier['invite_date'])) ?></td>
                         <td class="fw-semibold"><?= (int) $courier['orders_count'] ?></td>
-                        <td class="fw-semibold"><?= number_format((float) $courier['reward'], 0, ',', ' ') ?> ₽</td>
+                        <td class="fw-semibold" style="color:#111827;"><?= number_format((float) $courier['reward'], 0, ',', ' ') ?> ₽</td>
                         <td><span class="badge-status"><?= h($courier['status']) ?></span></td>
                     </tr>
                 <?php endforeach; ?>

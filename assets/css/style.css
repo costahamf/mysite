@@ -1393,3 +1393,81 @@ body:not(.landing-page) .offcanvas {
         font-size: .82rem;
     }
 }
+
+.user-chip {
+    cursor: pointer;
+}
+
+.user-chip:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.stat-trend {
+    font-size: .83rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+}
+
+.action-badge {
+    background: var(--yellow);
+    color: #111827;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.table-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: 999px;
+    background: #fff;
+    font-size: .84rem;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: #111827;
+}
+
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.auth-container {
+    max-width: 640px;
+}
+
+.auth-container-wide {
+    max-width: 720px;
+}
+
+.auth-card {
+    box-shadow: var(--shadow-md);
+}
+
+.auth-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.auth-brand .app-logo {
+    width: 34px;
+    height: 34px;
+}
