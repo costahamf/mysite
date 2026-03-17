@@ -26,149 +26,174 @@ $newsList = $newsStmt->fetchAll();
 $partnerLink = 'https://reg.eda.yandex.ru/?advertisement_campaign=forms_for_agents&user_invite_code=f570ca2872604481884bbe72291d8ec5&utm_content=blank';
 $unreadNews = getUnreadNewsCount($recruiterId);
 $availableBalance = getRecruiterAvailableBalance($recruiterId);
+$userName = trim((string) ($_SESSION['user']['name'] ?? 'Партнёр'));
+$userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
 ?>
 <!doctype html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Личный кабинет рекрутера</title>
+    <title>Личный кабинет рекрутера | Яндекс Еда</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body class="app-bg">
-<nav class="navbar navbar-expand-lg bg-warning shadow-sm">
-    <div class="container d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center gap-2">
-            <img src="/assets/img/logo.png" alt="Логотип" class="app-logo" onerror="this.style.display='none'">
-            <span class="navbar-brand mb-0">Личный кабинет рекрутера</span>
+<body class="app-bg app-modern">
+<nav class="navbar navbar-modern sticky-top">
+    <div class="container modern-container d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+            <a href="/dashboard" class="navbar-brand-modern text-decoration-none">
+                <img src="/assets/img/logo.png" alt="Яндекс Еда" class="app-logo" onerror="this.style.display='none'">
+                <span>Личный кабинет</span>
+            </a>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="/dashboard" class="top-nav-link active"><i class="fas fa-house"></i>Главная</a>
+                <a href="/rates" class="top-nav-link"><i class="fas fa-chart-line"></i>Ставки</a>
+                <a href="/info" class="top-nav-link"><i class="fas fa-circle-info"></i>Информация</a>
+            </div>
         </div>
-        <a href="/logout" class="btn btn-dark">Выйти</a>
+
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-light position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#newsOffcanvas" aria-controls="newsOffcanvas">
+                <i class="far fa-bell"></i>
+                <?php if ($unreadNews > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                        <?= $unreadNews > 9 ? '9+' : $unreadNews ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+            <div class="user-chip">
+                <span class="user-avatar"><?= h($userInitial) ?></span>
+                <span class="text-white fw-semibold d-none d-md-inline"><?= h($userName) ?></span>
+            </div>
+            <a href="/logout" class="btn btn-warning"><i class="fas fa-right-from-bracket"></i>Выйти</a>
+        </div>
     </div>
 </nav>
 
-<a href="https://t.me/YaEdaRekrut_bot" class="support-floating" target="_blank">Поддержка</a>
+<a href="https://t.me/YaEdaRekrut_bot" class="support-floating" target="_blank" title="Поддержка">
+    <i class="fab fa-telegram"></i>
+</a>
 
-<div class="container py-4">
-    <h1 class="h3 section-title mb-3">Здравствуйте, <?= h($_SESSION['user']['name']) ?></h1>
-
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="crm-card p-3 h-100 stat-card">
-                <div class="text-muted">Всего курьеров</div>
-                <div class="h2 mb-0"><?= (int) $stats['total_couriers'] ?></div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="crm-card p-3 h-100 stat-card">
-                <div class="text-muted">Общий заработок</div>
-                <div class="h2 mb-0"><?= number_format((float) $stats['total_reward'], 0, ',', ' ') ?> ₽</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="crm-card p-3 h-100 stat-card">
-                <div class="text-muted">Доступно к выводу</div>
-                <div class="h2 mb-0"><?= number_format($availableBalance, 0, ',', ' ') ?> ₽</div>
-            </div>
-        </div>
+<div class="container modern-container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <h1 class="h3 section-title mb-0">Здравствуйте, <?= h($userName) ?>!</h1>
+        <div class="date-chip"><i class="far fa-calendar"></i><?= date('d.m.Y') ?></div>
     </div>
 
-    <div class="d-flex flex-wrap gap-2 mb-4">
-        <a href="/dashboard/add-courier" class="btn btn-warning btn-lg">Добавить курьера</a>
-        <a href="/dashboard/withdraw" class="btn btn-secondary btn-lg">Вывод средств</a>
-        <button
-            type="button"
-            class="btn btn-outline-dark btn-lg"
-            data-copy-link="<?= h($partnerLink) ?>"
-            data-copy-message="Партнерская ссылка скопирована"
-        >
-            Партнерская ссылка
-        </button>
+    <div class="stats-grid mb-4">
+        <article class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div>
+                <div class="stat-label">Всего курьеров</div>
+                <div class="stat-value"><?= (int) $stats['total_couriers'] ?></div>
+            </div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-icon"><i class="fas fa-ruble-sign"></i></div>
+            <div>
+                <div class="stat-label">Общий заработок</div>
+                <div class="stat-value"><?= number_format((float) $stats['total_reward'], 0, ',', ' ') ?> ₽</div>
+            </div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+            <div>
+                <div class="stat-label">Доступно к выводу</div>
+                <div class="stat-value"><?= number_format($availableBalance, 0, ',', ' ') ?> ₽</div>
+            </div>
+        </article>
+    </div>
 
-        <a href="/rates" class="btn btn-outline-dark btn-lg">Ставки</a>
-        <a href="/info" class="btn btn-outline-dark btn-lg">Информация</a>
-        <button class="btn btn-outline-dark btn-lg position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#newsOffcanvas" aria-controls="newsOffcanvas">
-            🔔 Новости
-            <?php if ($unreadNews > 0): ?>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    +<?= $unreadNews > 9 ? '9' : $unreadNews ?>
-                </span>
-            <?php endif; ?>
-        </button>
+    <div class="quick-actions mb-4">
+        <div class="quick-actions-title"><i class="fas fa-bolt"></i>Быстрые действия</div>
+        <div class="actions-grid">
+            <a href="/dashboard/add-courier" class="action-item"><span class="action-icon"><i class="fas fa-user-plus"></i></span><span>Добавить курьера</span></a>
+            <a href="/dashboard/withdraw" class="action-item"><span class="action-icon"><i class="fas fa-money-bill-transfer"></i></span><span>Вывод средств</span></a>
+            <button type="button" class="action-item" data-copy-link="<?= h($partnerLink) ?>" data-copy-message="Партнерская ссылка скопирована">
+                <span class="action-icon"><i class="fas fa-link"></i></span><span>Партнерская ссылка</span>
+            </button>
+            <a href="/rates" class="action-item"><span class="action-icon"><i class="fas fa-chart-column"></i></span><span>Ставки</span></a>
+            <a href="/info" class="action-item"><span class="action-icon"><i class="fas fa-book"></i></span><span>Информация</span></a>
+        </div>
     </div>
 
     <div id="copy-feedback" class="alert alert-success d-none" role="alert"></div>
 
-    <div class="table-responsive crm-card p-3 table-clean">
-        <table class="table table-striped align-middle mb-0">
-            <thead>
-            <tr>
-                <th>Фамилия</th>
-                <th>Имя</th>
-                <th>Город</th>
-                <th>Дата приглашения</th>
-                <th>Количество заказов</th>
-                <th>Вознаграждение</th>
-                <th>Статус</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php if (!$couriers): ?>
-                <tr><td colspan="7" class="text-center">Пока нет курьеров</td></tr>
-            <?php endif; ?>
-            <?php foreach ($couriers as $courier): ?>
+    <section class="table-section">
+        <div class="table-header">
+            <h2 class="h5 mb-0"><i class="fas fa-truck-fast me-2 text-warning"></i>Список курьеров</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
                 <tr>
-                    <td><?= h($courier['last_name']) ?></td>
-                    <td><?= h($courier['first_name']) ?></td>
-                    <td><?= h($courier['city']) ?></td>
-                    <td><?= h($courier['invite_date']) ?></td>
-                    <td><?= (int) $courier['orders_count'] ?></td>
-                    <td><?= number_format((float) $courier['reward'], 0, ',', ' ') ?> ₽</td>
-                    <td><span class="badge text-bg-dark badge-status"><?= h($courier['status']) ?></span></td>
+                    <th>Фамилия</th>
+                    <th>Имя</th>
+                    <th>Город</th>
+                    <th>Дата приглашения</th>
+                    <th>Заказы</th>
+                    <th>Вознаграждение</th>
+                    <th>Статус</th>
                 </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                <?php if (!$couriers): ?>
+                    <tr><td colspan="7" class="text-center py-4 text-muted">Пока нет приглашенных курьеров</td></tr>
+                <?php endif; ?>
+                <?php foreach ($couriers as $courier): ?>
+                    <tr>
+                        <td><?= h($courier['last_name']) ?></td>
+                        <td><?= h($courier['first_name']) ?></td>
+                        <td><?= h($courier['city']) ?></td>
+                        <td><?= date('d.m.Y', strtotime((string) $courier['invite_date'])) ?></td>
+                        <td class="fw-semibold"><?= (int) $courier['orders_count'] ?></td>
+                        <td class="fw-semibold"><?= number_format((float) $courier['reward'], 0, ',', ' ') ?> ₽</td>
+                        <td><span class="badge-status"><?= h($courier['status']) ?></span></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
 
 <div class="offcanvas offcanvas-end news-offcanvas" tabindex="-1" id="newsOffcanvas" aria-labelledby="newsOffcanvasLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="newsOffcanvasLabel">Новости</h5>
+        <h5 class="offcanvas-title" id="newsOffcanvasLabel"><i class="fas fa-newspaper me-2"></i>Новости</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body p-2">
+    <div class="offcanvas-body p-3">
         <?php if (!$newsList): ?>
             <div class="alert alert-light border">Пока новостей нет.</div>
         <?php else: ?>
             <div class="row g-2 h-100">
-                <div class="col-5 border-end pe-2 news-list-panel">
-                    <div class="list-group list-group-flush">
-                        <?php foreach ($newsList as $i => $item): ?>
-                            <button
-                                type="button"
-                                class="list-group-item list-group-item-action news-select-btn news-select-item <?= $i === 0 ? 'active' : '' ?>"
-                                data-news-title="<?= h($item['title']) ?>"
-                                data-news-content="<?= h($item['content']) ?>"
-                                data-news-date="<?= h($item['created_at']) ?>"
-                                data-news-image="<?= h((string) $item['image_path']) ?>"
-                            >
-                                <div class="fw-semibold small text-truncate"><?= h($item['title']) ?></div>
-                                <div class="text-muted x-small"><?= h($item['created_at']) ?></div>
-                            </button>
-                        <?php endforeach; ?>
-                    </div>
+                <div class="col-5 news-list-panel">
+                    <?php foreach ($newsList as $i => $item): ?>
+                        <button
+                            type="button"
+                            class="news-select-btn news-select-item <?= $i === 0 ? 'active' : '' ?>"
+                            data-news-title="<?= h($item['title']) ?>"
+                            data-news-content="<?= h($item['content']) ?>"
+                            data-news-date="<?= date('d.m.Y', strtotime((string) $item['created_at'])) ?>"
+                            data-news-image="<?= h((string) $item['image_path']) ?>"
+                        >
+                            <div class="fw-semibold text-truncate"><?= h($item['title']) ?></div>
+                            <div class="text-muted small"><?= date('d.m.Y', strtotime((string) $item['created_at'])) ?></div>
+                        </button>
+                    <?php endforeach; ?>
                 </div>
-                <div class="col-7 ps-2">
-                    <div id="news-preview" class="news-preview-card">
-                        <h6 id="news-preview-title" class="mb-2"><?= h($newsList[0]['title']) ?></h6>
-                        <small id="news-preview-date" class="text-muted d-block mb-2"><?= h($newsList[0]['created_at']) ?></small>
+                <div class="col-7">
+                    <div class="news-preview-card">
+                        <h6 id="news-preview-title" class="fw-bold"><?= h($newsList[0]['title']) ?></h6>
+                        <small id="news-preview-date" class="text-muted d-block mb-2"><?= date('d.m.Y', strtotime((string) $newsList[0]['created_at'])) ?></small>
                         <?php if (!empty($newsList[0]['image_path'])): ?>
                             <img id="news-preview-image" src="<?= h($newsList[0]['image_path']) ?>" class="img-fluid news-image-compact mb-2" alt="Фото новости">
                         <?php else: ?>
                             <img id="news-preview-image" src="" class="img-fluid news-image-compact mb-2 d-none" alt="Фото новости">
                         <?php endif; ?>
-                        <div id="news-preview-content" style="white-space: pre-wrap;"><?= h($newsList[0]['content']) ?></div>
+                        <div id="news-preview-content" class="small" style="white-space: pre-line;"><?= h($newsList[0]['content']) ?></div>
                     </div>
                 </div>
             </div>
