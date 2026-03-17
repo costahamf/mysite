@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await navigator.clipboard.writeText(link);
         feedback.textContent = message;
         feedback.classList.remove('d-none');
-        setTimeout(() => feedback.classList.add('d-none'), 2200);
+        setTimeout(() => feedback.classList.add('d-none'), 3000);
       } catch (error) {
         feedback.textContent = 'Не удалось скопировать автоматически. Скопируйте ссылку вручную.';
         feedback.classList.remove('d-none');

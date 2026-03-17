@@ -27,20 +27,24 @@ if (dbHasColumn('users', 'last_seen_news_id')) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body class="app-bg">
-<nav class="navbar navbar-expand-lg bg-warning shadow-sm">
-    <div class="container">
-        <div class="d-flex align-items-center gap-2"><img src="/assets/img/logo.png" alt="Логотип" class="app-logo" onerror="this.style.display='none'"><span class="navbar-brand mb-0">Новости CRM</span></div>
+<body class="app-bg app-modern">
+<nav class="navbar navbar-modern sticky-top">
+    <div class="container modern-container d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <a href="/news" class="navbar-brand-modern text-decoration-none">
+            <img src="/assets/img/logo.png" alt="Яндекс Еда" class="app-logo" onerror="this.style.display='none'">
+            <span>Новости</span>
+        </a>
         <div class="d-flex gap-2">
             <?php if (($_SESSION['user']['role'] ?? '') === 'admin'): ?>
-                <a href="/admin" class="btn btn-dark">Админ панель</a>
+                <a href="/admin" class="btn btn-outline-light">Админ панель</a>
             <?php else: ?>
-                <a href="/dashboard" class="btn btn-dark">Личный кабинет</a>
+                <a href="/dashboard" class="btn btn-outline-light">Личный кабинет</a>
             <?php endif; ?>
+            <a href="/logout" class="btn btn-warning">Выйти</a>
         </div>
     </div>
 </nav>
-<div class="container py-4">
+<div class="container modern-container py-4">
     <h1 class="h3 section-title mb-3">Новости</h1>
 
     <?php if (!$newsList): ?>
