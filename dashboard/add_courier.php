@@ -50,10 +50,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Добавить курьера</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body class="app-bg">
-<div class="container py-4" style="max-width: 760px;">
+<body class="app-bg app-modern">
+<nav class="navbar navbar-modern sticky-top">
+    <div class="container modern-container d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center gap-4 flex-wrap">
+            <a href="/dashboard" class="navbar-brand-modern text-decoration-none">
+                <img src="/assets/img/logo.png" alt="Яндекс Еда" class="app-logo" onerror="this.style.display='none'">
+                <span>Яндекс Еда</span>
+            </a>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="/dashboard" class="top-nav-link"><i class="fas fa-house"></i>Главная</a>
+                <a href="/rates" class="top-nav-link"><i class="fas fa-chart-line"></i>Ставки</a>
+                <a href="/info" class="top-nav-link"><i class="fas fa-circle-info"></i>Информация</a>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="/logout" class="btn btn-warning">Выйти</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container modern-container py-4" style="max-width: 760px;">
     <h1 class="h3 section-title mb-1">Добавление курьера</h1>
     <p class="text-muted">Статус, количество заказов и вознаграждение устанавливает администратор после проверки.</p>
 
